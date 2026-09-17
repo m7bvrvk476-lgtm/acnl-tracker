@@ -471,7 +471,10 @@
       try {
         const parsed = JSON.parse(val);
         if (Array.isArray(parsed)) {
-          localStorage.setItem(STORAGE_ITEMS_KEY, JSON.stringify(parsed));
+          // NEW MERGE CODE:
+          const existing = getItems();
+          const merged = [...existing, ...parsed];
+          localStorage.setItem(STORAGE_ITEMS_KEY, JSON.stringify(merged));
           closeDatasetModal();
           render();
           alert('New dataset loaded successfully!');
