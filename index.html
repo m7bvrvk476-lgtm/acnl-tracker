@@ -641,32 +641,105 @@
       renderDailyTasks();
     }
 
+    /* ================= AUTOMATED IMAGE FETCHING & CACHING ================= */
+const IMAGE_CACHE_KEY = 'acnl_image_cache_v1';
+
+function getImageCache() {
+  return JSON.parse(localStorage.getItem(IMAGE_CACHE_KEY) || '{}');
+}
+
+function setImageCache(name, url) {
+  const cache = getImageCache();
+  cache[name] = url;
+  localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+}
+
+// Category fallback emojis if an image is not found
+function getCategoryEmoji(category) {
+  const emojis = {
+    'Bugs': '🦋', 'Fish': '🐟', 'Sea Creatures': '🦪', 
+    'Fossils': '🦴', 'Art': '🖼️', 'Gyroids': '🏺', 
+    'K.K. Songs': '🎵', 'Tools': '🛠️', 'Furniture': '🪑', 
+    'Clothing': '👕', 'Villagers': '🐱'
+  };
+  return emojis[category] || '🍃';
+}
+
+// Generate automated Nookipedia direct image URL
+function getAutoImageUrl(itemName) {
+  const cache = getImageCache();
+  if (cache[itemName]) return cache[itemName];
+
+  // Nookipedia direct file redirect format
+  const formattedName = itemName.trim().replace(/\s+/g, '_');
+  return `https://nookipedia.com/wiki/Special:Redirect/file/${encodeURIComponent(formattedName)}.png`;
+}
+
+// Handles image loading failures gracefully with fallbacks
+function handleImageError(imgElement, itemName, category) {
+  const cache = getImageCache();
+
+  // Attempt second fallback naming convention (Animal Crossing New Leaf suffix)
+  if (!cache[itemName + '_tried_nl']) {
+    cache[itemName + '_tried_nl'] = true;
+    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+    
+    const formattedName = itemName.trim().replace(/\s+/g, '_');
+    imgElement.src = `https://nookipedia.com/wiki/Special:Redirect/file/${encodeURIComponent(formattedName)}_NL.png`;
+    return;
+  }
+
+  // If both fail, replace image with category emoji placeholder
+  const placeholder = document.createElement('div');
+  placeholder.className = 'card-icon-placeholder';
+  placeholder.innerText = getCategoryEmoji(category);
+  imgElement.replaceWith(placeholder);
+}
+
+// Cache valid image URLs upon successful load
+function handleImageSuccess(imgElement, itemName) {
+  if (imgElement.src && !imgElement.src.startsWith('data:')) {
+    setImageCache(itemName, imgElement.src);
+  }
+}
+
     /* Villagers */
     function getVillagers() {
       return JSON.parse(localStorage.getItem(STORAGE_VILLAGERS_KEY) || '["Isabelle", "Tom Nook"]');
     }
 
-    function renderVillagers() {
-      const villagers = getVillagers();
-      const dateStr = new Date().toISOString().slice(0, 10);
-      const saved = JSON.parse(localStorage.getItem('acnl_villager_talks_' + dateStr) || '{}');
+  function renderVillagers() {
+     const villagers = getVillagers();
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const saved = JSON.parse(localStorage.getItem('acnl_villager_talks_' + dateStr) || '{}');
 
-      const container = document.getElementById('villagerList');
-      container.innerHTML = '';
+    const container = document.getElementById('villagerList');
+    container.innerHTML = '';
 
-      villagers.forEach(v => {
-        const isTalked = !!saved[v];
-        const card = document.createElement('div');
-        card.className = 'villager-card';
-        card.innerHTML = `
-          <span class="villager-name">${v}</span>
-          <label class="checkbox-label" style="font-size:0.75rem;">
-            <input type="checkbox" ${isTalked ? 'checked' : ''} onchange="toggleVillagerTalk('${v}', this.checked)"> Talked
+    villagers.forEach(v => {
+      const vName = typeof v === 'string' ? v : v.name;
+      const isTalked = !!saved[vName];
+      const imgUrl = (typeof v === 'object' && v.image) ? v.image : getAutoImageUrl(vName);
+
+       const card = document.createElement('div');
+      card.className = 'villager-card';
+      card.innerHTML = `
+        <img src="${imgUrl}" 
+             class="card-icon" 
+             alt="${vName}" 
+             loading="lazy"
+             onload="handleImageSuccess(this, '${vName}')"
+             onerror="handleImageError(this, '${vName}', 'Villagers')">
+        <div style="flex: 1;">
+          <span class="villager-name">${vName}</span>
+          <label class="checkbox-label" style="font-size:0.75rem; margin-top:2px;">
+             <input type="checkbox" ${isTalked ? 'checked' : ''} onchange="toggleVillagerTalk('${vName}', this.checked)"> Talked
           </label>
-        `;
-        container.appendChild(card);
-      });
-    }
+        </div>
+      `;
+      container.appendChild(card);
+  });
+}
 
     function toggleVillagerTalk(name, isChecked) {
       const dateStr = new Date().toISOString().slice(0, 10);
@@ -758,110 +831,103 @@
       });
     }
 
-    function renderCatalog() {
-      renderCatalogTabs();
-      const state = getStoredState();
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      const statusFilter = document.getElementById('statusFilter').value;
-      const sortOrder = document.getElementById('sortOrder').value;
-      const grid = document.getElementById('catalogGrid');
+  function renderCatalog() {
+  renderCatalogTabs();
+  const state = getStoredState();
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const statusFilter = document.getElementById('statusFilter').value;
+  const sortOrder = document.getElementById('sortOrder').value;
+  const grid = document.getElementById('catalogGrid');
 
-      grid.innerHTML = '';
+  grid.innerHTML = '';
 
-      let totalPoints = 0;
-      let earnedPoints = 0;
+  let totalPoints = 0;
+  let earnedPoints = 0;
 
-      // Prepare list copy
-      let filtered = [...COMPLETE_DATASET];
+  let filtered = [...COMPLETE_DATASET];
 
-      // Filter category
-      if (currentCategory !== 'ALL') {
-        filtered = filtered.filter(i => i.category === currentCategory);
-      }
+  if (currentCategory !== 'ALL') filtered = filtered.filter(i => i.category === currentCategory);
+  if (search) filtered = filtered.filter(i => i.name.toLowerCase().includes(search));
 
-      // Filter search
-      if (search) {
-        filtered = filtered.filter(i => i.name.toLowerCase().includes(search));
-      }
+  filtered = filtered.filter(item => {
+    const isCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(item.category);
+    const st = state[item.id] || {};
 
-      // Filter status & calculate overall points
-      filtered = filtered.filter(item => {
-        const isCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(item.category);
-        const st = state[item.id] || {};
-
-        if (isCreature) {
-          totalPoints += 2;
-          if (st.caught) earnedPoints++;
-          if (st.donated) earnedPoints++;
-        } else {
-          totalPoints += 1;
-          if (st.cataloged) earnedPoints++;
-        }
-
-        const isDone = isCreature ? (st.caught && st.donated) : st.cataloged;
-        if (statusFilter === 'COMPLETED' && !isDone) return false;
-        if (statusFilter === 'UNOBTAINED' && isDone) return false;
-        return true;
-      });
-
-      /* SORTING LOGIC (New Feature) */
-      filtered.sort((a, b) => {
-        const aIsCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(a.category);
-        const bIsCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(b.category);
-        
-        const aDone = aIsCreature ? (state[a.id]?.caught && state[a.id]?.donated) : state[a.id]?.cataloged;
-        const bDone = bIsCreature ? (state[b.id]?.caught && state[b.id]?.donated) : state[b.id]?.cataloged;
-
-        if (sortOrder === 'alpha-asc') return a.name.localeCompare(b.name);
-        if (sortOrder === 'alpha-desc') return b.name.localeCompare(a.name);
-        if (sortOrder === 'status-unobtained') return (aDone === bDone) ? 0 : aDone ? 1 : -1;
-        if (sortOrder === 'status-completed') return (aDone === bDone) ? 0 : bDone ? -1 : 1;
-        return 0; // default order
-      });
-
-      // Render Cards
-      filtered.forEach(item => {
-        const isCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(item.category);
-        const st = state[item.id] || {};
-        const isDone = isCreature ? (st.caught && st.donated) : st.cataloged;
-
-        const card = document.createElement('div');
-        card.className = `item-card ${isDone ? 'completed' : ''}`;
-
-        let ctrlHTML = '';
-        if (isCreature) {
-          ctrlHTML = `
-            <div style="display:flex; gap:8px;">
-              <label class="checkbox-label" style="font-size:0.78rem;">
-                <input type="checkbox" ${st.caught ? 'checked' : ''} onchange="updateItemState('${item.id}', 'caught', this.checked)"> Caught
-              </label>
-              <label class="checkbox-label" style="font-size:0.78rem;">
-                <input type="checkbox" ${st.donated ? 'checked' : ''} onchange="updateItemState('${item.id}', 'donated', this.checked)"> Donated
-              </label>
-            </div>`;
-        } else {
-          ctrlHTML = `
-            <label class="checkbox-label" style="font-size:0.78rem;">
-              <input type="checkbox" ${st.cataloged ? 'checked' : ''} onchange="updateItemState('${item.id}', 'cataloged', this.checked)"> Cataloged
-            </label>`;
-        }
-
-        card.innerHTML = `
-          <div>
-            <div class="item-title">${item.name}</div>
-            <div class="item-cat">${item.category}</div>
-          </div>
-          ${ctrlHTML}
-        `;
-        grid.appendChild(card);
-      });
-
-      // Update Progress Bar
-      const pct = totalPoints > 0 ? ((earnedPoints / totalPoints) * 100).toFixed(1) : 0;
-      document.getElementById('progressBar').style.width = `${pct}%`;
-      document.getElementById('progressText').innerText = `${earnedPoints} / ${totalPoints} Progress Points Earned`;
-      document.getElementById('progressPercent').innerText = `${pct}%`;
+    if (isCreature) {
+      totalPoints += 2;
+      if (st.caught) earnedPoints++;
+      if (st.donated) earnedPoints++;
+    } else {
+      totalPoints += 1;
+      if (st.cataloged) earnedPoints++;
     }
+
+    const isDone = isCreature ? (st.caught && st.donated) : st.cataloged;
+    if (statusFilter === 'COMPLETED' && !isDone) return false;
+    if (statusFilter === 'UNOBTAINED' && isDone) return false;
+    return true;
+  });
+
+  // Sort Order
+  filtered.sort((a, b) => {
+    const aIsCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(a.category);
+    const bIsCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(b.category);
+    const aDone = aIsCreature ? (state[a.id]?.caught && state[a.id]?.donated) : state[a.id]?.cataloged;
+    const bDone = bIsCreature ? (state[b.id]?.caught && state[b.id]?.donated) : state[b.id]?.cataloged;
+
+    if (sortOrder === 'alpha-asc') return a.name.localeCompare(b.name);
+    if (sortOrder === 'alpha-desc') return b.name.localeCompare(a.name);
+    if (sortOrder === 'status-unobtained') return (aDone === bDone) ? 0 : aDone ? 1 : -1;
+    if (sortOrder === 'status-completed') return (aDone === bDone) ? 0 : bDone ? -1 : 1;
+    return 0;
+  });
+
+  // Render Item Cards with Automated Icons
+  filtered.forEach(item => {
+    const isCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(item.category);
+    const st = state[item.id] || {};
+    const isDone = isCreature ? (st.caught && st.donated) : st.cataloged;
+    const imgUrl = item.image || getAutoImageUrl(item.name);
+
+    const card = document.createElement('div');
+    card.className = `item-card ${isDone ? 'completed' : ''}`;
+
+    let ctrlHTML = isCreature ? `
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <label class="checkbox-label" style="font-size:0.78rem;">
+          <input type="checkbox" ${st.caught ? 'checked' : ''} onchange="updateItemState('${item.id}', 'caught', this.checked)"> Caught
+        </label>
+        <label class="checkbox-label" style="font-size:0.78rem;">
+          <input type="checkbox" ${st.donated ? 'checked' : ''} onchange="updateItemState('${item.id}', 'donated', this.checked)"> Donated
+        </label>
+      </div>` : `
+      <label class="checkbox-label" style="font-size:0.78rem;">
+        <input type="checkbox" ${st.cataloged ? 'checked' : ''} onchange="updateItemState('${item.id}', 'cataloged', this.checked)"> Cataloged
+      </label>`;
+
+    card.innerHTML = `
+      <div style="display:flex; align-items:center; gap:10px; flex:1;">
+        <img src="${imgUrl}" 
+             class="card-icon" 
+             alt="${item.name}" 
+             loading="lazy"
+             onload="handleImageSuccess(this, '${item.name}')"
+             onerror="handleImageError(this, '${item.name}', '${item.category}')">
+        <div>
+          <div class="item-title">${item.name}</div>
+          <div class="item-cat">${item.category}</div>
+        </div>
+      </div>
+      ${ctrlHTML}
+    `;
+    grid.appendChild(card);
+  });
+
+  const pct = totalPoints > 0 ? ((earnedPoints / totalPoints) * 100).toFixed(1) : 0;
+  document.getElementById('progressBar').style.width = `${pct}%`;
+  document.getElementById('progressText').innerText = `${earnedPoints} / ${totalPoints} Progress Points Earned`;
+  document.getElementById('progressPercent').innerText = `${pct}%`;
+}
 
     /* ================= BACKUP & IMPORT/EXPORT ================= */
     function exportFullSave() {
