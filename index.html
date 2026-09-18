@@ -641,7 +641,7 @@
       renderDailyTasks();
     }
 
-    /* ================= AUTOMATED IMAGE FETCHING & CACHING ================= */
+/* ================= UPDATED INDIVIDUAL IMAGE RESOLVER ================= */
 const IMAGE_CACHE_KEY = 'acnl_image_cache_v1';
 
 function getImageCache() {
@@ -654,49 +654,69 @@ function setImageCache(name, url) {
   localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
 }
 
-// Category fallback emojis if an image is not found
-function getCategoryEmoji(category) {
-  const emojis = {
-    'Bugs': '🦋', 'Fish': '🐟', 'Sea Creatures': '🦪', 
-    'Fossils': '🦴', 'Art': '🖼️', 'Gyroids': '🏺', 
-    'K.K. Songs': '🎵', 'Tools': '🛠️', 'Furniture': '🪑', 
-    'Clothing': '👕', 'Villagers': '🐱'
-  };
-  return emojis[category] || '🍃';
+// Properly formats item names to match Nookipedia's strict casing rules
+function formatItemNameForWiki(name) {
+  return name
+    .trim()
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('_');
 }
 
-// Generate automated Nookipedia direct image URL
-function getAutoImageUrl(itemName) {
+// Generates primary image URL targeting Animal Crossing: New Leaf specifically
+function getAutoImageUrl(itemName, category) {
   const cache = getImageCache();
   if (cache[itemName]) return cache[itemName];
 
-  // Nookipedia direct file redirect format
-  const formattedName = itemName.trim().replace(/\s+/g, '_');
-  return `https://nookipedia.com/wiki/Special:Redirect/file/${encodeURIComponent(formattedName)}.png`;
+  const wikiName = formatItemNameForWiki(itemName);
+  
+  // Villager portraits use standard names; items typically use _NL suffix
+  if (category === 'Villagers') {
+    return `https://nookipedia.com/wiki/Special:Redirect/file/${wikiName}_NH.png`;
+  }
+  return `https://nookipedia.com/wiki/Special:Redirect/file/${wikiName}_NL.png`;
 }
 
-// Handles image loading failures gracefully with fallbacks
+// Multi-stage fallback handler when primary URL fails
 function handleImageError(imgElement, itemName, category) {
   const cache = getImageCache();
+  const wikiName = formatItemNameForWiki(itemName);
+  const stageKey = itemName + '_img_stage';
+  const currentStage = cache[stageKey] || 0;
 
-  // Attempt second fallback naming convention (Animal Crossing New Leaf suffix)
-  if (!cache[itemName + '_tried_nl']) {
-    cache[itemName + '_tried_nl'] = true;
+  if (currentStage === 0) {
+    // Stage 1: Try without the _NL suffix
+    cache[stageKey] = 1;
     localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
-    
-    const formattedName = itemName.trim().replace(/\s+/g, '_');
-    imgElement.src = `https://nookipedia.com/wiki/Special:Redirect/file/${encodeURIComponent(formattedName)}_NL.png`;
-    return;
-  }
+    imgElement.src = `https://nookipedia.com/wiki/Special:Redirect/file/${wikiName}.png`;
+  } else if (currentStage === 1) {
+    // Stage 2: Try HHA / Icon suffix format
+    cache[stageKey] = 2;
+    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+    imgElement.src = `https://nookipedia.com/wiki/Special:Redirect/file/HHA_${wikiName}_NL.png`;
+  } else if (currentStage === 2 && category === 'Villagers') {
+    // Stage 3 for Villagers: Try Pocket Camp or New Leaf render
+    cache[stageKey] = 3;
+    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+    imgElement.src = `https://nookipedia.com/wiki/Special:Redirect/file/${wikiName}_NL.png`;
+  } else {
+    // Final Stage: If all image URLs fail, replace with a clean category badge
+    const emojis = {
+      'Bugs': '🦋', 'Fish': '🐟', 'Sea Creatures': '🦪', 
+      'Fossils': '🦴', 'Art': '🖼️', 'Gyroids': '🏺', 
+      'K.K. Songs': '🎵', 'Tools': '🛠️', 'Furniture': '🪑', 
+      'Clothing': '👕', 'Villagers': '🐱'
+    };
+    const emoji = emojis[category] || '🍃';
 
-  // If both fail, replace image with category emoji placeholder
-  const placeholder = document.createElement('div');
-  placeholder.className = 'card-icon-placeholder';
-  placeholder.innerText = getCategoryEmoji(category);
-  imgElement.replaceWith(placeholder);
+    const placeholder = document.createElement('div');
+    placeholder.className = 'card-icon-placeholder';
+    placeholder.innerText = emoji;
+    imgElement.replaceWith(placeholder);
+  }
 }
 
-// Cache valid image URLs upon successful load
 function handleImageSuccess(imgElement, itemName) {
   if (imgElement.src && !imgElement.src.startsWith('data:')) {
     setImageCache(itemName, imgElement.src);
