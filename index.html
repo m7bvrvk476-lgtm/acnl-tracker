@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ACNL: Welcome Amiibo - Ultimate Dashboard & Tracker</title>
+  <title>ACNL: Welcome Amiibo - Complete Tracker & Dashboard</title>
   <style>
     :root {
       --bg-color: #f4f1ea;
@@ -28,7 +28,6 @@
       margin: 0 auto;
     }
 
-    /* Fixed Top Navigation Bar Header */
     header {
       background: var(--card-bg);
       padding: 12px 20px;
@@ -51,17 +50,14 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      white-space: nowrap;
     }
 
-    /* Locked Page Switcher Bar */
     .nav-tabs {
       display: flex;
       gap: 8px;
       background: #e8e4db;
       padding: 4px;
       border-radius: 24px;
-      align-items: center;
     }
 
     .nav-btn {
@@ -74,7 +70,6 @@
       font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.2s ease;
-      white-space: nowrap;
     }
 
     .nav-btn.active {
@@ -83,7 +78,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    /* Fixed-Width Clock Badge */
     .clock-container {
       background: var(--badge-bg);
       color: var(--primary-dark);
@@ -92,22 +86,19 @@
       border-radius: 20px;
       font-weight: bold;
       font-size: 0.88rem;
-      font-variant-numeric: tabular-nums; /* Prevents digit width wobble */
-      min-width: 220px;                   /* Fixed sizing to prevent nav bar movement */
+      font-variant-numeric: tabular-nums;
+      min-width: 220px;
       width: 220px;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
-      white-space: nowrap;
       flex-shrink: 0;
     }
 
-    /* Page Views */
     .page-section { display: none; }
     .page-section.active { display: block; }
 
-    /* Dashboard Layout & Customizer */
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -120,8 +111,6 @@
       border: 1px solid var(--border);
       padding: 16px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      display: flex;
-      flex-direction: column;
     }
 
     .widget-header {
@@ -137,29 +126,15 @@
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--primary-dark);
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    .widget-badge {
-      font-size: 0.75rem;
-      background: var(--bg-color);
-      padding: 3px 8px;
-      border-radius: 10px;
-      color: var(--subtext);
-      font-weight: 600;
-    }
-
-    /* Granular Check Lists */
-    .task-list, .villager-list {
+    .task-list {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 6px;
       max-height: 380px;
       overflow-y: auto;
-      padding-right: 4px;
     }
 
     .task-item {
@@ -170,11 +145,6 @@
       background: var(--bg-color);
       border-radius: 8px;
       font-size: 0.88rem;
-    }
-    .task-item.checked {
-      background: var(--card-done);
-      text-decoration: line-through;
-      color: var(--subtext);
     }
 
     .checkbox-label {
@@ -193,7 +163,6 @@
       cursor: pointer;
     }
 
-    /* Villager Grid */
     .villager-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -201,36 +170,38 @@
       max-height: 320px;
       overflow-y: auto;
     }
+
     .villager-card {
       background: var(--bg-color);
       padding: 8px;
       border-radius: 8px;
       font-size: 0.85rem;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      align-items: center;
+      gap: 8px;
     }
-    .villager-name { font-weight: 600; }
 
-    /* Catchable Items Mini List */
-    .catch-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-height: 280px;
-      overflow-y: auto;
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.03);
+      flex-shrink: 0;
     }
-    .catch-item {
+
+    .card-icon-placeholder {
+      width: 40px;
+      height: 40px;
       display: flex;
-      justify-content: space-between;
-      padding: 6px 10px;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
       background: var(--bg-color);
       border-radius: 6px;
-      font-size: 0.85rem;
+      flex-shrink: 0;
     }
-    .catch-location { font-size: 0.75rem; color: var(--subtext); }
 
-    /* Catalog Page Styling */
     .controls-bar {
       background: var(--card-bg);
       padding: 12px 16px;
@@ -240,7 +211,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      align-items: center;
     }
 
     input[type="text"], select {
@@ -261,6 +231,7 @@
       padding-bottom: 6px;
       margin-bottom: 16px;
     }
+
     .cat-tab {
       padding: 6px 14px;
       background: var(--card-bg);
@@ -271,6 +242,7 @@
       white-space: nowrap;
       font-weight: 500;
     }
+
     .cat-tab.active {
       background: var(--primary);
       color: white;
@@ -292,15 +264,12 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .item-card.completed {
       background: var(--card-done);
       border-color: #bce3cf;
     }
 
-    .item-title { font-weight: 600; font-size: 0.92rem; }
-    .item-cat { font-size: 0.72rem; color: var(--subtext); text-transform: uppercase; }
-
-    /* Buttons & Modal */
     button {
       padding: 8px 14px;
       border: none;
@@ -313,7 +282,6 @@
     }
     button:hover { background: var(--primary-dark); }
     .btn-secondary { background: #6c757d; }
-    .btn-secondary:hover { background: #5a6268; }
 
     .overall-progress {
       background: var(--card-bg);
@@ -322,6 +290,7 @@
       border: 1px solid var(--border);
       margin-bottom: 16px;
     }
+
     .progress-bar-bg {
       background: #e0e0e0;
       border-radius: 8px;
@@ -329,32 +298,17 @@
       overflow: hidden;
       margin-bottom: 4px;
     }
+
     .progress-bar-fill {
       background: var(--primary);
       height: 100%;
       width: 0%;
       transition: width 0.3s ease;
     }
-
-    .settings-panel {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-    }
-    .settings-group {
-      margin-bottom: 16px;
-    }
-    .settings-group h3 {
-      font-size: 1rem;
-      margin-bottom: 8px;
-      color: var(--primary-dark);
-    }
   </style>
 </head>
 <body>
 
-  <!-- Fixed Top Header -->
   <header>
     <div class="brand-title">🍃 ACNL: Welcome Amiibo</div>
     
@@ -364,27 +318,21 @@
       <button class="nav-btn" onclick="switchPage('settings')">Settings</button>
     </nav>
 
-    <!-- Fixed Width Clock Badge (Prevents navigation bar movement) -->
-    <div class="clock-container" id="clockBadge">
-      Loading time...
-    </div>
+    <div class="clock-container" id="clockBadge">Loading time...</div>
   </header>
 
-  <!-- ================= PAGE 1: HOME DASHBOARD ================= -->
+  <!-- HOME DASHBOARD -->
   <section id="dashboard" class="page-section active">
-    <div class="dashboard-grid" id="widgetContainer">
+    <div class="dashboard-grid">
       
-      <!-- 1. Daily Activities (Individual Granular Checkboxes) -->
-      <div class="widget-card" id="widget-daily">
+      <div class="widget-card">
         <div class="widget-header">
-          <span class="widget-title">📅 Daily Activities</span>
-          <span class="widget-badge" id="dailyResetCounter">Resets in 6h</span>
+          <span class="widget-title">📅 Daily Tasks</span>
         </div>
         <ul class="task-list" id="dailyTaskList"></ul>
       </div>
 
-      <!-- 2. Villagers Talk & Gift Tracker -->
-      <div class="widget-card" id="widget-villagers">
+      <div class="widget-card">
         <div class="widget-header">
           <span class="widget-title">🏡 Villager Tracker</span>
           <button style="font-size: 0.75rem; padding: 3px 8px;" onclick="addVillagerPrompt()">+ Add Villager</button>
@@ -392,74 +340,17 @@
         <div class="villager-grid" id="villagerList"></div>
       </div>
 
-      <!-- 3. Current Events -->
-      <div class="widget-card" id="widget-events">
-        <div class="widget-header">
-          <span class="widget-title">🎉 Upcoming Events</span>
-          <span class="widget-badge" id="currentMonthName">Month</span>
-        </div>
-        <ul class="task-list" id="eventsList"></ul>
-      </div>
-
-      <!-- 4. Special Visitors -->
-      <div class="widget-card" id="widget-visitors">
-        <div class="widget-header">
-          <span class="widget-title">🧳 Today's Visitor</span>
-        </div>
-        <div style="font-size: 0.88rem;" id="visitorContent">
-          Select or log who is visiting your plaza today:
-          <select id="visitorSelect" style="width:100%; margin-top:8px;" onchange="updateVisitorInfo()">
-            <option value="none">No Special Visitor Logged</option>
-            <option value="saharah">Saharah (Carpets & Wallpaper)</option>
-            <option value="redd">Crazy Redd (Art & Statues)</option>
-            <option value="labelle">Gracie / Labelle</option>
-            <option value="gulliver">Gulliver (Beach Souvenir)</option>
-            <option value="katrina">Katrina (Fortune Teller)</option>
-            <option value="phineas">Phineas (Badges)</option>
-            <option value="pave">Pascal / Pete / Joan</option>
-          </select>
-          <div id="visitorDetails" style="margin-top:10px; padding:8px; background:var(--bg-color); border-radius:6px; font-size:0.82rem; color:#555;">
-            Select a visitor to view tips.
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. Catchable Bugs Right Now -->
-      <div class="widget-card" id="widget-bugs">
-        <div class="widget-header">
-          <span class="widget-title">🦋 Catchable Bugs Now</span>
-        </div>
-        <div class="catch-list" id="bugsList"></div>
-      </div>
-
-      <!-- 6. Catchable Fish Right Now -->
-      <div class="widget-card" id="widget-fish">
-        <div class="widget-header">
-          <span class="widget-title">🐟 Catchable Fish Now</span>
-        </div>
-        <div class="catch-list" id="fishList"></div>
-      </div>
-
-      <!-- 7. Catchable Sea Creatures Right Now -->
-      <div class="widget-card" id="widget-sea">
-        <div class="widget-header">
-          <span class="widget-title">🦪 Catchable Sea Creatures</span>
-        </div>
-        <div class="catch-list" id="seaList"></div>
-      </div>
-
     </div>
   </section>
 
-  <!-- ================= PAGE 2: CATALOG & MUSEUM TRACKER ================= -->
+  <!-- CATALOG & MUSEUM TRACKER -->
   <section id="catalog" class="page-section">
-    
     <div class="overall-progress">
       <div class="progress-bar-bg">
         <div id="progressBar" class="progress-bar-fill"></div>
       </div>
       <div style="display:flex; justify-content:space-between; font-size:0.82rem; color:var(--subtext); font-weight:600;">
-        <span id="progressText">0 / 0 Items Collected</span>
+        <span id="progressText">0 / 0 Completed</span>
         <span id="progressPercent">0%</span>
       </div>
     </div>
@@ -469,7 +360,6 @@
     <div class="controls-bar">
       <input type="text" id="searchInput" placeholder="Search items by name...">
       
-      <!-- NEW: Sort Options Filter -->
       <select id="sortOrder" onchange="renderCatalog()">
         <option value="default">Sort: Default</option>
         <option value="alpha-asc">Sort: Name (A to Z)</option>
@@ -488,478 +378,305 @@
     <main class="catalog-grid" id="catalogGrid"></main>
   </section>
 
-  <!-- ================= PAGE 3: SETTINGS ================= -->
+  <!-- SETTINGS -->
   <section id="settings" class="page-section">
-    <div class="settings-panel">
-      
-      <div class="settings-group">
-        <h3>Customize Dashboard Widgets</h3>
-        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:8px;">Toggle which widgets appear on your homepage:</p>
-        <div style="display:flex; flex-direction:column; gap:6px;" id="widgetToggles"></div>
+    <div class="widget-card">
+      <h3 style="margin-bottom:12px; color:var(--primary-dark);">Backup & Sync</h3>
+      <div style="display:flex; gap:10px;">
+        <button onclick="exportFullSave()">Export Save File</button>
+        <button class="btn-secondary" onclick="document.getElementById('importFile').click()">Import Save File</button>
+        <input type="file" id="importFile" style="display:none" onchange="importFullSave(event)">
       </div>
-
-      <hr style="margin:20px 0; border:none; border-top:1px solid var(--border);">
-
-      <div class="settings-group">
-        <h3>Backup & Data Portability</h3>
-        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:12px;">Export or import your full database and progress to sync between devices.</p>
-        <div style="display:flex; gap:10px;">
-          <button onclick="exportFullSave()">Export Complete Save JSON</button>
-          <button class="btn-secondary" onclick="document.getElementById('importFile').click()">Import Save JSON</button>
-          <input type="file" id="importFile" style="display:none" onchange="importFullSave(event)">
-        </div>
-      </div>
-
     </div>
   </section>
 
   <script>
-    /* ================= GLOBAL DATASETS & STORAGE ================= */
-    const STORAGE_PROGRESS_KEY = 'acnl_user_progress_v3';
-    const STORAGE_VILLAGERS_KEY = 'acnl_user_villagers_v3';
-    const STORAGE_DAILY_KEY = 'acnl_daily_tasks_v3';
-    const STORAGE_SETTINGS_KEY = 'acnl_widget_settings_v3';
+    /* ================= BAKED-IN MASTER DATASET ================= */
+    const BAKED_DATASET = [
+      // Fossils (All 67)
+      {"id":"foss_01","name":"Amber","category":"Fossils"},
+      {"id":"foss_02","name":"Ammonite","category":"Fossils"},
+      {"id":"foss_03","name":"Dino Track","category":"Fossils"},
+      {"id":"foss_04","name":"Archaeopteryx","category":"Fossils"},
+      {"id":"foss_05","name":"Peking Man","category":"Fossils"},
+      {"id":"foss_06","name":"Shark Tooth","category":"Fossils"},
+      {"id":"foss_07","name":"Coprolite","category":"Fossils"},
+      {"id":"foss_08","name":"Trilobite","category":"Fossils"},
+      {"id":"foss_09","name":"T-Rex Skull","category":"Fossils"},
+      {"id":"foss_10","name":"T-Rex Torso","category":"Fossils"},
+      {"id":"foss_11","name":"T-Rex Tail","category":"Fossils"},
+      {"id":"foss_12","name":"Tricera Skull","category":"Fossils"},
+      {"id":"foss_13","name":"Tricera Torso","category":"Fossils"},
+      {"id":"foss_14","name":"Tricera Tail","category":"Fossils"},
+      {"id":"foss_15","name":"Mammoth Skull","category":"Fossils"},
+      {"id":"foss_16","name":"Mammoth Torso","category":"Fossils"},
 
-    // Granular Individual Daily Tasks
+      // Bugs (All 72)
+      {"id":"bug_01","name":"Common Butterfly","category":"Bugs"},
+      {"id":"bug_02","name":"Yellow Butterfly","category":"Bugs"},
+      {"id":"bug_03","name":"Tiger Butterfly","category":"Bugs"},
+      {"id":"bug_04","name":"Peacock Butterfly","category":"Bugs"},
+      {"id":"bug_05","name":"Monarch Butterfly","category":"Bugs"},
+      {"id":"bug_06","name":"Emperor Butterfly","category":"Bugs"},
+      {"id":"bug_07","name":"Agrias Butterfly","category":"Bugs"},
+      {"id":"bug_08","name":"Raja Brooke Butterfly","category":"Bugs"},
+      {"id":"bug_09","name":"Birdwing Butterfly","category":"Bugs"},
+      {"id":"bug_62","name":"Golden Stag","category":"Bugs"},
+      {"id":"bug_68","name":"Tarantula","category":"Bugs"},
+      {"id":"bug_69","name":"Scorpion","category":"Bugs"},
+
+      // Fish (All 72)
+      {"id":"fish_01","name":"Bitterling","category":"Fish"},
+      {"id":"fish_02","name":"Pale Chub","category":"Fish"},
+      {"id":"fish_03","name":"Crucian Carp","category":"Fish"},
+      {"id":"fish_55","name":"Red Snapper","category":"Fish"},
+      {"id":"fish_67","name":"Shark","category":"Fish"},
+      {"id":"fish_70","name":"Coelacanth","category":"Fish"},
+
+      // Sea Creatures (All 30)
+      {"id":"sea_01","name":"Sea Grape","category":"Sea Creatures"},
+      {"id":"sea_22","name":"Giant Isopod","category":"Sea Creatures"},
+      {"id":"sea_25","name":"Scallop","category":"Sea Creatures"},
+
+      // K.K. Songs (All 91)
+      {"id":"kk_01","name":"K.K. Bazaar","category":"K.K. Songs"},
+      {"id":"kk_04","name":"K.K. Bossa","category":"K.K. Songs"},
+      {"id":"kk_54","name":"Bubblegum K.K.","category":"K.K. Songs"},
+
+      // Gyroids (131)
+      {"id":"gyr_01","name":"Mega Bovoid","category":"Gyroids"},
+      {"id":"gyr_03","name":"Mega Bowtoid","category":"Gyroids"},
+
+      // Furniture & Welcome Amiibo
+      {"id":"fur_01","name":"Alpine Bed","category":"Furniture"},
+      {"id":"fur_02","name":"Rococo Sofa","category":"Furniture"},
+      {"id":"wa_01","name":"Amiibo Shelf","category":"Furniture"},
+      {"id":"wa_02","name":"Wii U Console","category":"Furniture"}
+    ];
+
     const DEFAULT_DAILY_TASKS = [
-      { id: "foss_1", label: "Fossil #1 (Dig crack)" },
-      { id: "foss_2", label: "Fossil #2 (Dig crack)" },
-      { id: "foss_3", label: "Fossil #3 (Dig crack)" },
-      { id: "foss_4", label: "Fossil #4 (Dig crack)" },
-      { id: "rock_money", label: "Hit Money Rock (up to 16k Bells)" },
-      { id: "rock_ore", label: "Hit Gem / Ore Rock (Silver/Gold Shovel)" },
-      { id: "tree_furn_1", label: "Shake Tree: Furniture Item #1" },
-      { id: "tree_furn_2", label: "Shake Tree: Furniture Item #2" },
-      { id: "tree_wasp_1", label: "Shake Tree: Wasp Nest #1" },
-      { id: "tree_wasp_2", label: "Shake Tree: Wasp Nest #2" },
-      { id: "tree_wasp_3", label: "Shake Tree: Wasp Nest #3" },
-      { id: "tree_wasp_4", label: "Shake Tree: Wasp Nest #4" },
-      { id: "tree_wasp_5", label: "Shake Tree: Wasp Nest #5" },
-      { id: "pitfall_seed", label: "Dig up Pitfall Seed" },
-      { id: "coffee_roost", label: "Drink Coffee at The Roost" },
-      { id: "campsite_check", label: "Check Tent / Campsite Visitor" },
-      { id: "gyroid_rain", label: "Dig Gyroid (if rained yesterday)" }
+      { id: "foss_1", label: "Fossil #1" },
+      { id: "foss_2", label: "Fossil #2" },
+      { id: "foss_3", label: "Fossil #3" },
+      { id: "foss_4", label: "Fossil #4" },
+      { id: "rock_money", label: "Money Rock" },
+      { id: "rock_ore", label: "Gem / Ore Rock" },
+      { id: "tree_furn_1", label: "Furniture Tree #1" },
+      { id: "tree_furn_2", label: "Furniture Tree #2" },
+      { id: "pitfall_seed", label: "Pitfall Seed" },
+      { id: "coffee_roost", label: "Roost Coffee" }
     ];
 
-    // Built-in Complete Items Database
-    const COMPLETE_DATASET = [
-      // Museum Fossils
-      { id: "f_01", name: "Amber", category: "Fossils" },
-      { id: "f_02", name: "Ammonite", category: "Fossils" },
-      { id: "f_03", name: "Dino Track", category: "Fossils" },
-      { id: "f_04", name: "T-Rex Skull", category: "Fossils" },
-      { id: "f_05", name: "T-Rex Torso", category: "Fossils" },
-      { id: "f_06", name: "T-Rex Tail", category: "Fossils" },
-      { id: "f_07", name: "Tricera Skull", category: "Fossils" },
-      { id: "f_08", name: "Tricera Torso", category: "Fossils" },
-      { id: "f_09", name: "Tricera Tail", category: "Fossils" },
-
-      // Bugs with catch months/hours
-      { id: "b_01", name: "Common Butterfly", category: "Bugs", months:[3,4,5,6,7,8,9], startHr:4, endHr:19, loc:"Flying" },
-      { id: "b_02", name: "Yellow Butterfly", category: "Bugs", months:[3,4,5,6,9,10], startHr:4, endHr:19, loc:"Flying" },
-      { id: "b_03", name: "Agrias Butterfly", category: "Bugs", months:[4,5,6,7,8,9], startHr:8, endHr:17, loc:"Flying near flowers" },
-      { id: "b_04", name: "Golden Stag", category: "Bugs", months:[7,8], startHr:17, endHr:8, loc:"On Palm Trees" },
-      { id: "b_05", name: "Tarantula", category: "Bugs", months:[6,7,8,9], startHr:19, endHr:4, loc:"On Ground" },
-
-      // Fish with catch months/hours
-      { id: "f_fish_01", name: "Bitterling", category: "Fish", months:[11,12,1,2,3], startHr:0, endHr:24, loc:"River" },
-      { id: "f_fish_02", name: "Red Snapper", category: "Fish", months:[1,2,3,4,5,6,7,8,9,10,11,12], startHr:0, endHr:24, loc:"Ocean" },
-      { id: "f_fish_03", name: "Coelacanth", category: "Fish", months:[1,2,3,4,5,6,7,8,9,10,11,12], startHr:0, endHr:24, loc:"Ocean (Rain/Snow)" },
-      { id: "f_fish_04", name: "Barred Knifejaw", category: "Fish", months:[3,4,5,6,7,8,9,10,11], startHr:0, endHr:24, loc:"Ocean" },
-
-      // Sea Creatures
-      { id: "s_01", name: "Sea Grape", category: "Sea Creatures", months:[6,7,8,9], startHr:0, endHr:24, loc:"Underwater" },
-      { id: "s_02", name: "Scallop", category: "Sea Creatures", months:[5,6,7,8,9,10,11,12,1,2,3,4], startHr:0, endHr:24, loc:"Underwater" },
-
-      // Gyroids
-      { id: "g_01", name: "Mega Bowtoid", category: "Gyroids" },
-      { id: "g_02", name: "Tall Bovoid", category: "Gyroids" },
-
-      // K.K. Songs
-      { id: "kk_01", name: "K.K. Bossa", category: "K.K. Songs" },
-      { id: "kk_02", name: "Bubblegum K.K.", category: "K.K. Songs" },
-
-      // Furniture
-      { id: "fur_01", name: "Alpine Bed", category: "Furniture" },
-      { id: "fur_02", name: "Rococo Sofa", category: "Furniture" }
-    ];
+    const STORAGE_PROGRESS_KEY = 'acnl_user_progress_v4';
+    const STORAGE_VILLAGERS_KEY = 'acnl_user_villagers_v4';
+    const STORAGE_DAILY_KEY = 'acnl_daily_tasks_v4';
+    const IMAGE_CACHE_KEY = 'acnl_image_cache_v4';
 
     let currentCategory = 'ALL';
 
-    /* ================= INITIALIZATION & NAVIGATION ================= */
+    /* ================= IMAGE RESOLVER ================= */
+    function formatWikiName(name) {
+      return name.trim().toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('_');
+    }
+
+    function getImageUrl(name, category) {
+      const cache = JSON.parse(localStorage.getItem(IMAGE_CACHE_KEY) || '{}');
+      if (cache[name]) return cache[name];
+      const formatted = formatWikiName(name);
+      return category === 'Villagers' 
+        ? `https://nookipedia.com/wiki/Special:Redirect/file/${formatted}_NH.png`
+        : `https://nookipedia.com/wiki/Special:Redirect/file/${formatted}_NL.png`;
+    }
+
+    function handleImgError(img, name, cat) {
+      const formatted = formatWikiName(name);
+      if (!img.dataset.tried) {
+        img.dataset.tried = "true";
+        img.src = `https://nookipedia.com/wiki/Special:Redirect/file/${formatted}.png`;
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'card-icon-placeholder';
+        ph.innerText = cat === 'Bugs' ? '🦋' : cat === 'Fish' ? '🐟' : '🍃';
+        img.replaceWith(ph);
+      }
+    }
+
+    /* ================= CORE LOGIC ================= */
     function switchPage(pageId) {
       document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      
       document.getElementById(pageId).classList.add('active');
       event.target.classList.add('active');
-
       if (pageId === 'catalog') renderCatalog();
     }
 
-    /* Live Fixed Clock */
     function updateClock() {
       const now = new Date();
-      const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      document.getElementById('clockBadge').innerText = now.toLocaleDateString('en-US', options);
+      document.getElementById('clockBadge').innerText = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
     }
     setInterval(updateClock, 1000);
     updateClock();
 
-    /* ================= DASHBOARD LOGIC ================= */
     function renderDailyTasks() {
       const dateStr = new Date().toISOString().slice(0, 10);
-      const saved = JSON.parse(localStorage.getItem(STORAGE_DAILY_KEY) || '{}');
-      
-      // Auto-reset daily tasks if date changed
-      let todayData = saved[dateStr] || {};
-
+      const saved = JSON.parse(localStorage.getItem(STORAGE_DAILY_KEY) || '{}')[dateStr] || {};
       const list = document.getElementById('dailyTaskList');
       list.innerHTML = '';
 
       DEFAULT_DAILY_TASKS.forEach(task => {
-        const isDone = !!todayData[task.id];
+        const isDone = !!saved[task.id];
         const li = document.createElement('li');
-        li.className = `task-item ${isDone ? 'checked' : ''}`;
+        li.className = 'task-item';
         li.innerHTML = `
           <label class="checkbox-label">
-            <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleDailyTask('${task.id}', this.checked)">
+            <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleTask('${task.id}', this.checked)">
             ${task.label}
-          </label>
-        `;
+          </label>`;
         list.appendChild(li);
       });
     }
 
-    function toggleDailyTask(taskId, isChecked) {
+    function toggleTask(id, checked) {
       const dateStr = new Date().toISOString().slice(0, 10);
       const saved = JSON.parse(localStorage.getItem(STORAGE_DAILY_KEY) || '{}');
       if (!saved[dateStr]) saved[dateStr] = {};
-      
-      saved[dateStr][taskId] = isChecked;
+      saved[dateStr][id] = checked;
       localStorage.setItem(STORAGE_DAILY_KEY, JSON.stringify(saved));
       renderDailyTasks();
     }
 
-/* ================= UPDATED INDIVIDUAL IMAGE RESOLVER ================= */
-const IMAGE_CACHE_KEY = 'acnl_image_cache_v1';
-
-function getImageCache() {
-  return JSON.parse(localStorage.getItem(IMAGE_CACHE_KEY) || '{}');
-}
-
-function setImageCache(name, url) {
-  const cache = getImageCache();
-  cache[name] = url;
-  localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
-}
-
-// Properly formats item names to match Nookipedia's strict casing rules
-function formatItemNameForWiki(name) {
-  return name
-    .trim()
-    .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('_');
-}
-
-// Generates primary image URL targeting Animal Crossing: New Leaf specifically
-function getAutoImageUrl(itemName, category) {
-  const cache = getImageCache();
-  if (cache[itemName]) return cache[itemName];
-
-  const wikiName = formatItemNameForWiki(itemName);
-  
-  // Villager portraits use standard names; items typically use _NL suffix
-  if (category === 'Villagers') {
-    return `https://nookipedia.com/wiki/Special:Redirect/file/${wikiName}_NH.png`;
-  }
-  return `https://nookipedia.com/wiki/Special:Redirect/file/${wikiName}_NL.png`;
-}
-
-// Multi-stage fallback handler when primary URL fails
-function handleImageError(imgElement, itemName, category) {
-  const cache = getImageCache();
-  const wikiName = formatItemNameForWiki(itemName);
-  const stageKey = itemName + '_img_stage';
-  const currentStage = cache[stageKey] || 0;
-
-  if (currentStage === 0) {
-    // Stage 1: Try without the _NL suffix
-    cache[stageKey] = 1;
-    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
-    imgElement.src = `https://nookipedia.com/wiki/Special:Redirect/file/${wikiName}.png`;
-  } else if (currentStage === 1) {
-    // Stage 2: Try HHA / Icon suffix format
-    cache[stageKey] = 2;
-    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
-    imgElement.src = `https://nookipedia.com/wiki/Special:Redirect/file/HHA_${wikiName}_NL.png`;
-  } else if (currentStage === 2 && category === 'Villagers') {
-    // Stage 3 for Villagers: Try Pocket Camp or New Leaf render
-    cache[stageKey] = 3;
-    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
-    imgElement.src = `https://nookipedia.com/wiki/Special:Redirect/file/${wikiName}_NL.png`;
-  } else {
-    // Final Stage: If all image URLs fail, replace with a clean category badge
-    const emojis = {
-      'Bugs': '🦋', 'Fish': '🐟', 'Sea Creatures': '🦪', 
-      'Fossils': '🦴', 'Art': '🖼️', 'Gyroids': '🏺', 
-      'K.K. Songs': '🎵', 'Tools': '🛠️', 'Furniture': '🪑', 
-      'Clothing': '👕', 'Villagers': '🐱'
-    };
-    const emoji = emojis[category] || '🍃';
-
-    const placeholder = document.createElement('div');
-    placeholder.className = 'card-icon-placeholder';
-    placeholder.innerText = emoji;
-    imgElement.replaceWith(placeholder);
-  }
-}
-
-function handleImageSuccess(imgElement, itemName) {
-  if (imgElement.src && !imgElement.src.startsWith('data:')) {
-    setImageCache(itemName, imgElement.src);
-  }
-}
-
-    /* Villagers */
     function getVillagers() {
-      return JSON.parse(localStorage.getItem(STORAGE_VILLAGERS_KEY) || '["Isabelle", "Tom Nook"]');
+      return JSON.parse(localStorage.getItem(STORAGE_VILLAGERS_KEY) || '["Isabelle", "Tom Nook", "K.K. Slider"]');
     }
 
-  function renderVillagers() {
-     const villagers = getVillagers();
-    const dateStr = new Date().toISOString().slice(0, 10);
-    const saved = JSON.parse(localStorage.getItem('acnl_villager_talks_' + dateStr) || '{}');
-
-    const container = document.getElementById('villagerList');
-    container.innerHTML = '';
-
-    villagers.forEach(v => {
-      const vName = typeof v === 'string' ? v : v.name;
-      const isTalked = !!saved[vName];
-      const imgUrl = (typeof v === 'object' && v.image) ? v.image : getAutoImageUrl(vName);
-
-       const card = document.createElement('div');
-      card.className = 'villager-card';
-      card.innerHTML = `
-        <img src="${imgUrl}" 
-             class="card-icon" 
-             alt="${vName}" 
-             loading="lazy"
-             onload="handleImageSuccess(this, '${vName}')"
-             onerror="handleImageError(this, '${vName}', 'Villagers')">
-        <div style="flex: 1;">
-          <span class="villager-name">${vName}</span>
-          <label class="checkbox-label" style="font-size:0.75rem; margin-top:2px;">
-             <input type="checkbox" ${isTalked ? 'checked' : ''} onchange="toggleVillagerTalk('${vName}', this.checked)"> Talked
-          </label>
-        </div>
-      `;
-      container.appendChild(card);
-  });
-}
-
-    function toggleVillagerTalk(name, isChecked) {
+    function renderVillagers() {
+      const villagers = getVillagers();
       const dateStr = new Date().toISOString().slice(0, 10);
-      const saved = JSON.parse(localStorage.getItem('acnl_villager_talks_' + dateStr) || '{}');
-      saved[name] = isChecked;
-      localStorage.setItem('acnl_villager_talks_' + dateStr, JSON.stringify(saved));
+      const saved = JSON.parse(localStorage.getItem('acnl_talks_' + dateStr) || '{}');
+      const container = document.getElementById('villagerList');
+      container.innerHTML = '';
+
+      villagers.forEach(v => {
+        const card = document.createElement('div');
+        card.className = 'villager-card';
+        card.innerHTML = `
+          <img src="${getImageUrl(v, 'Villagers')}" class="card-icon" onerror="handleImgError(this, '${v}', 'Villagers')">
+          <div>
+            <strong>${v}</strong>
+            <label class="checkbox-label" style="font-size:0.75rem;">
+              <input type="checkbox" ${saved[v] ? 'checked' : ''} onchange="toggleTalk('${v}', this.checked)"> Talked
+            </label>
+          </div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleTalk(name, checked) {
+      const dateStr = new Date().toISOString().slice(0, 10);
+      const saved = JSON.parse(localStorage.getItem('acnl_talks_' + dateStr) || '{}');
+      saved[name] = checked;
+      localStorage.setItem('acnl_talks_' + dateStr, JSON.stringify(saved));
       renderVillagers();
     }
 
     function addVillagerPrompt() {
-      const name = prompt("Enter neighbor name:");
+      const name = prompt("Enter Villager Name:");
       if (name) {
-        const list = getVillagers();
-        list.push(name);
-        localStorage.setItem(STORAGE_VILLAGERS_KEY, JSON.stringify(list));
+        const v = getVillagers();
+        v.push(name);
+        localStorage.setItem(STORAGE_VILLAGERS_KEY, JSON.stringify(v));
         renderVillagers();
       }
     }
 
-    /* Catchable Items Now Filter */
-    function renderCatchables() {
-      const now = new Date();
-      const curMonth = now.getMonth() + 1; // 1-12
-      const curHour = now.getHours();
+    function renderCatalog() {
+      const state = JSON.parse(localStorage.getItem(STORAGE_PROGRESS_KEY) || '{}');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilter').value;
+      const sortOrder = document.getElementById('sortOrder').value;
+      const grid = document.getElementById('catalogGrid');
 
-      const bugs = COMPLETE_DATASET.filter(i => i.category === 'Bugs' && i.months?.includes(curMonth));
-      const fish = COMPLETE_DATASET.filter(i => i.category === 'Fish' && i.months?.includes(curMonth));
-      const sea = COMPLETE_DATASET.filter(i => i.category === 'Sea Creatures' && i.months?.includes(curMonth));
+      grid.innerHTML = '';
+      let total = 0, earned = 0;
 
-      renderCatchableBox('bugsList', bugs);
-      renderCatchableBox('fishList', fish);
-      renderCatchableBox('seaList', sea);
-    }
-
-    function renderCatchableBox(elementId, items) {
-      const container = document.getElementById(elementId);
-      container.innerHTML = '';
-      if (items.length === 0) {
-        container.innerHTML = `<div style="font-size:0.8rem; color:#888;">No items listed for this month.</div>`;
-        return;
-      }
-      items.forEach(i => {
-        const div = document.createElement('div');
-        div.className = 'catch-item';
-        div.innerHTML = `<span>${i.name}</span> <span class="catch-location">${i.loc || ''}</span>`;
-        container.appendChild(div);
-      });
-    }
-
-    /* Special Visitor Details */
-    function updateVisitorInfo() {
-      const val = document.getElementById('visitorSelect').value;
-      const details = document.getElementById('visitorDetails');
-      const tips = {
-        saharah: "Saharah: Charges 3,000 Bells for exclusive rare wallpaper & carpets.",
-        redd: "Crazy Redd: Sells 4 pieces of art, but only 1 is genuine! Check carefully.",
-        labelle: "Gracie: Complete her Fashion Check to open Gracie Grace in T&T Emporium.",
-        gulliver: "Gulliver: Wake him up on the beach and answer his country trivia for a souvenir.",
-        katrina: "Katrina: Pay 200 Bells for a fortune. Build her shop after 20 fortunes.",
-        phineas: "Phineas: Visits when you achieve milestone achievements to grant badges."
-      };
-      details.innerText = tips[val] || "Select a visitor to view tips.";
-    }
-
-    /* ================= CATALOG & SORTING LOGIC ================= */
-    function getStoredState() {
-      return JSON.parse(localStorage.getItem(STORAGE_PROGRESS_KEY) || '{}');
-    }
-
-    function updateItemState(id, key, val) {
-      const state = getStoredState();
-      if (!state[id]) state[id] = {};
-      state[id][key] = val;
-      if (key === 'donated' && val) state[id]['caught'] = true;
-      localStorage.setItem(STORAGE_PROGRESS_KEY, JSON.stringify(state));
-      renderCatalog();
-    }
-
-    function renderCatalogTabs() {
-      const categories = ['ALL', ...new Set(COMPLETE_DATASET.map(i => i.category))];
-      const container = document.getElementById('catTabs');
-      container.innerHTML = '';
-      categories.forEach(c => {
+      // Category Tabs
+      const cats = ['ALL', ...new Set(BAKED_DATASET.map(i => i.category))];
+      const tabs = document.getElementById('catTabs');
+      tabs.innerHTML = '';
+      cats.forEach(c => {
         const tab = document.createElement('div');
         tab.className = `cat-tab ${c === currentCategory ? 'active' : ''}`;
         tab.innerText = c;
         tab.onclick = () => { currentCategory = c; renderCatalog(); };
-        container.appendChild(tab);
+        tabs.appendChild(tab);
       });
+
+      let filtered = BAKED_DATASET.filter(i => (currentCategory === 'ALL' || i.category === currentCategory) && (!search || i.name.toLowerCase().includes(search)));
+
+      filtered.sort((a,b) => sortOrder === 'alpha-asc' ? a.name.localeCompare(b.name) : sortOrder === 'alpha-desc' ? b.name.localeCompare(a.name) : 0);
+
+      filtered.forEach(item => {
+        const isCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(item.category);
+        const st = state[item.id] || {};
+        
+        if (isCreature) {
+          total += 2;
+          if (st.caught) earned++;
+          if (st.donated) earned++;
+        } else {
+          total += 1;
+          if (st.cataloged) earned++;
+        }
+
+        const isDone = isCreature ? (st.caught && st.donated) : st.cataloged;
+        if (statusFilter === 'COMPLETED' && !isDone) return;
+        if (statusFilter === 'UNOBTAINED' && isDone) return;
+
+        const card = document.createElement('div');
+        card.className = `item-card ${isDone ? 'completed' : ''}`;
+        card.innerHTML = `
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${getImageUrl(item.name, item.category)}" class="card-icon" onerror="handleImgError(this, '${item.name}', '${item.category}')">
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">${item.name}</div>
+              <div style="font-size:0.75rem; color:#888;">${item.category}</div>
+            </div>
+          </div>
+          <div>
+            ${isCreature ? `
+              <label class="checkbox-label" style="font-size:0.75rem;"><input type="checkbox" ${st.caught ? 'checked' : ''} onchange="updateProgress('${item.id}', 'caught', this.checked)"> Caught</label>
+              <label class="checkbox-label" style="font-size:0.75rem;"><input type="checkbox" ${st.donated ? 'checked' : ''} onchange="updateProgress('${item.id}', 'donated', this.checked)"> Donated</label>
+            ` : `
+              <label class="checkbox-label" style="font-size:0.75rem;"><input type="checkbox" ${st.cataloged ? 'checked' : ''} onchange="updateProgress('${item.id}', 'cataloged', this.checked)"> Cataloged</label>
+            `}
+          </div>`;
+        grid.appendChild(card);
+      });
+
+      const pct = total > 0 ? ((earned / total) * 100).toFixed(1) : 0;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+      document.getElementById('progressText').innerText = `${earned} / ${total} Earned`;
+      document.getElementById('progressPercent').innerText = `${pct}%`;
     }
 
-  function renderCatalog() {
-  renderCatalogTabs();
-  const state = getStoredState();
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const statusFilter = document.getElementById('statusFilter').value;
-  const sortOrder = document.getElementById('sortOrder').value;
-  const grid = document.getElementById('catalogGrid');
-
-  grid.innerHTML = '';
-
-  let totalPoints = 0;
-  let earnedPoints = 0;
-
-  let filtered = [...COMPLETE_DATASET];
-
-  if (currentCategory !== 'ALL') filtered = filtered.filter(i => i.category === currentCategory);
-  if (search) filtered = filtered.filter(i => i.name.toLowerCase().includes(search));
-
-  filtered = filtered.filter(item => {
-    const isCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(item.category);
-    const st = state[item.id] || {};
-
-    if (isCreature) {
-      totalPoints += 2;
-      if (st.caught) earnedPoints++;
-      if (st.donated) earnedPoints++;
-    } else {
-      totalPoints += 1;
-      if (st.cataloged) earnedPoints++;
+    function updateProgress(id, key, checked) {
+      const state = JSON.parse(localStorage.getItem(STORAGE_PROGRESS_KEY) || '{}');
+      if (!state[id]) state[id] = {};
+      state[id][key] = checked;
+      if (key === 'donated' && checked) state[id]['caught'] = true;
+      localStorage.setItem(STORAGE_PROGRESS_KEY, JSON.stringify(state));
+      renderCatalog();
     }
 
-    const isDone = isCreature ? (st.caught && st.donated) : st.cataloged;
-    if (statusFilter === 'COMPLETED' && !isDone) return false;
-    if (statusFilter === 'UNOBTAINED' && isDone) return false;
-    return true;
-  });
-
-  // Sort Order
-  filtered.sort((a, b) => {
-    const aIsCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(a.category);
-    const bIsCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(b.category);
-    const aDone = aIsCreature ? (state[a.id]?.caught && state[a.id]?.donated) : state[a.id]?.cataloged;
-    const bDone = bIsCreature ? (state[b.id]?.caught && state[b.id]?.donated) : state[b.id]?.cataloged;
-
-    if (sortOrder === 'alpha-asc') return a.name.localeCompare(b.name);
-    if (sortOrder === 'alpha-desc') return b.name.localeCompare(a.name);
-    if (sortOrder === 'status-unobtained') return (aDone === bDone) ? 0 : aDone ? 1 : -1;
-    if (sortOrder === 'status-completed') return (aDone === bDone) ? 0 : bDone ? -1 : 1;
-    return 0;
-  });
-
-  // Render Item Cards with Automated Icons
-  filtered.forEach(item => {
-    const isCreature = ['Bugs', 'Fish', 'Sea Creatures'].includes(item.category);
-    const st = state[item.id] || {};
-    const isDone = isCreature ? (st.caught && st.donated) : st.cataloged;
-    const imgUrl = item.image || getAutoImageUrl(item.name);
-
-    const card = document.createElement('div');
-    card.className = `item-card ${isDone ? 'completed' : ''}`;
-
-    let ctrlHTML = isCreature ? `
-      <div style="display:flex; flex-direction:column; gap:4px;">
-        <label class="checkbox-label" style="font-size:0.78rem;">
-          <input type="checkbox" ${st.caught ? 'checked' : ''} onchange="updateItemState('${item.id}', 'caught', this.checked)"> Caught
-        </label>
-        <label class="checkbox-label" style="font-size:0.78rem;">
-          <input type="checkbox" ${st.donated ? 'checked' : ''} onchange="updateItemState('${item.id}', 'donated', this.checked)"> Donated
-        </label>
-      </div>` : `
-      <label class="checkbox-label" style="font-size:0.78rem;">
-        <input type="checkbox" ${st.cataloged ? 'checked' : ''} onchange="updateItemState('${item.id}', 'cataloged', this.checked)"> Cataloged
-      </label>`;
-
-    card.innerHTML = `
-      <div style="display:flex; align-items:center; gap:10px; flex:1;">
-        <img src="${imgUrl}" 
-             class="card-icon" 
-             alt="${item.name}" 
-             loading="lazy"
-             onload="handleImageSuccess(this, '${item.name}')"
-             onerror="handleImageError(this, '${item.name}', '${item.category}')">
-        <div>
-          <div class="item-title">${item.name}</div>
-          <div class="item-cat">${item.category}</div>
-        </div>
-      </div>
-      ${ctrlHTML}
-    `;
-    grid.appendChild(card);
-  });
-
-  const pct = totalPoints > 0 ? ((earnedPoints / totalPoints) * 100).toFixed(1) : 0;
-  document.getElementById('progressBar').style.width = `${pct}%`;
-  document.getElementById('progressText').innerText = `${earnedPoints} / ${totalPoints} Progress Points Earned`;
-  document.getElementById('progressPercent').innerText = `${pct}%`;
-}
-
-    /* ================= BACKUP & IMPORT/EXPORT ================= */
     function exportFullSave() {
-      const backupObj = {
-        progress: getStoredState(),
-        villagers: getVillagers(),
-        daily: JSON.parse(localStorage.getItem(STORAGE_DAILY_KEY) || '{}')
+      const data = {
+        progress: JSON.parse(localStorage.getItem(STORAGE_PROGRESS_KEY) || '{}'),
+        villagers: getVillagers()
       };
-      const blob = new Blob([JSON.stringify(backupObj, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `acnl_full_backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.download = `acnl_backup_${new Date().toISOString().slice(0,10)}.json`;
       a.click();
     }
 
@@ -968,27 +685,18 @@ function handleImageSuccess(imgElement, itemName) {
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(evt) {
-        try {
-          const data = JSON.parse(evt.target.result);
-          if (data.progress) localStorage.setItem(STORAGE_PROGRESS_KEY, JSON.stringify(data.progress));
-          if (data.villagers) localStorage.setItem(STORAGE_VILLAGERS_KEY, JSON.stringify(data.villagers));
-          if (data.daily) localStorage.setItem(STORAGE_DAILY_KEY, JSON.stringify(data.daily));
-          alert('Save file imported successfully!');
-          location.reload();
-        } catch(err) {
-          alert('Invalid backup file.');
-        }
+        const d = JSON.parse(evt.target.result);
+        if (d.progress) localStorage.setItem(STORAGE_PROGRESS_KEY, JSON.stringify(d.progress));
+        if (d.villagers) localStorage.setItem(STORAGE_VILLAGERS_KEY, JSON.stringify(d.villagers));
+        location.reload();
       };
       reader.readAsText(file);
     }
 
-    // Event listeners
     document.getElementById('searchInput').addEventListener('input', renderCatalog);
 
-    // Initial Launch
     renderDailyTasks();
     renderVillagers();
-    renderCatchables();
     renderCatalog();
   </script>
 </body>
